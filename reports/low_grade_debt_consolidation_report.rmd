@@ -1,0 +1,102 @@
+---
+#title: "Lending Club Loan Analysis"
+#author: "Sydeaka Watson"
+#date: "`r Sys.time()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+require("knitr")
+wd = "/Users/sw659h/Documents/training/mysql/repos/workflow-automation/reports"
+opts_knit$set(root.dir = wd)
+opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(comment = NA)
+options(bitmapType = 'cairo')
+```
+
+
+
+```{r read, results='hide'}
+## Load libraries
+rm(list=ls())
+suppressMessages(library(knitr))
+#suppressMessages(library(htmlTable))
+suppressMessages(library(readxl))
+suppressMessages(library(DT))
+
+
+kable2 = function(table, rn=T, caption='') {
+  kable(table, row.names=rn, align='lll', format.args = list(big.mark = ","), caption=caption)
+}
+```
+
+
+
+```{r}
+## Load saved objects created in execution of get_data.R
+load('../model_results/saved_objects.RData')
+items = names(saved_objects)
+for (item in items) assign(item, saved_objects[[item]])
+obj_names = lapply(saved_objects, function(u) names(u))
+for (obj_nm in names(obj_names)) {
+  items = obj_names[[obj_nm]]
+  for (item in items) assign(item, saved_objects[[obj_nm]][[item]])
+}
+rm(saved_objects,item,items, obj_names, obj_nm,partitions,automl_seed)
+```
+
+
+# Predicting Adverse Outcomes for Debt Consolidation Loans {.tabset .tabset-fade}
+
+`r Sys.time()`
+
+## Introduction 
+
+Blah Blah Blah intro text
+
+## Dataset {.tabset .tabset-fade}
+
+More text here, including details about the attributes and outcomes
+
+```{r}
+dat_head = head(dat,100)
+rownames(dat_head) = NULL
+```
+
+
+```{r, results='asis'}
+datatable(dat_head, caption='Lending Club loans for debt consolidation (data sample)') 
+```
+
+## Modeling {.tabset .tabset-fade}
+
+Info about the modeling strategy
+
+### AutoML
+```{r, results='asis'}
+datatable(leaderboard, caption='AutoML leaderboard') %>% formatRound(colnames(leaderboard), 3)
+```
+
+### LIME
+```{r, results='asis'}
+#kable2('', caption='AutoML leaderboard')
+```
+
+### Variable Importance
+```{r, results='asis'}
+datatable(varimp, caption='Variable Importance for top GBM') %>% formatRound(colnames(varimp), 3)
+```
+
+
+
+
+```{r}
+
+```
+
+
+
+
+
