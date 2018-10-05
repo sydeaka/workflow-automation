@@ -2,7 +2,7 @@
 
 if (interactive()) {
   cred_file = '~/workflow_creds.txt'
-  wd = 
+  wd = ''
   if (!file.exists(cred_file)) {
     stop(paste('Credentials file', cred_file,  'missing from home directory. Exiting.\n'))
   } else {
@@ -10,9 +10,11 @@ if (interactive()) {
     creds = strsplit(creds, ' ')[[1]]
     username = creds[1]
     password = creds[2]
-    year = 2018
+    year = 2016
     quarter = 2
-    work_dir='/Users/sw659h/Documents/training/mysql'
+    work_dir='/Users/sw659h/Documents/training/mysql/repos/workflow-automation'
+    use_mysql = TRUE
+    csv = paste0(work_dir, '/data/downloads/LoanStats_', year, 'Q', quarter, '.csv')
   }
   
 } else {
@@ -23,30 +25,70 @@ if (interactive()) {
   year = args[3]
   quarter = args[4]
   work_dir = args[5]
-  
+  use_mysql = as.logical(args[6])
+  csv = args[7]
+  csv = paste0(work_dir, '/data/downloads/', csv)
 }
 
-setwd(work_dir)
 
-## Load packages
-library(RMySQL)
+setwd(work_dir)
 
 ## Helper functions
 msg = function(u) cat('\n', u, '\n')
 
 msg(paste('Running in interactive mode? ', interactive()))
 
-msg('Make connection')
-con <- dbConnect(dbDriver('MySQL'),
-                 user=username, password=password,
-                 dbname="lending", host="localhost")
+print(ls())
 
-msg('List tables')
-dbListTables(con)
+if (use_mysql==T) {
+  ## Load packages
+  library(RMySQL)
 
-msg('Retrieve dataset from lending.modeling')
-dat0 = dbGetQuery(con, "select * from lending.modeling")
-Sys.sleep(5)
+  msg('Make connection')
+  con <- dbConnect(dbDriver('MySQL'),
+                   user=username, password=password,
+                   dbname="lending", host="localhost")
+
+  msg('List tables')
+  dbListTables(con)
+
+  msg('Retrieve dataset from lending.modeling')
+  dat0 = dbGetQuery(con, "select * from lending.modeling")
+  Sys.sleep(5)
+ } else {
+   msg('\nDatasets:')
+   abbrev = paste0(work_dir, '/data/join_data/state_abbreviations.csv')
+   pop = paste0(work_dir, '/data/join_data/state_population.csv')
+   msg(csv)
+   msg(abbrev)
+   msg(pop)
+   
+    ## Manually create modeling table
+    ## Merge lending club dataset with state abbreviations and state population datasets
+    library(data.table)
+   
+    ## Function to read in records twice (second time to correct data type errors)
+    fread2 = function(filename, nskip=0) {
+      dat0 = fread(filename, strip.white=F, logical01=F, data.table=F, stringsAsFactors=F, skip=nskip,fill=T)
+      classes = sapply(dat0, class)
+      dat0 = fread(filename, strip.white=F, logical01=F, data.table=F, stringsAsFactors=F, skip=nskip,fill=T, colClasses=classes)
+      return(dat0)
+    }
+   
+    dat0 = fread2(csv, nskip=1)
+    dat0 = subset(dat0, !is.na(loan_amnt))
+    state_abbrev = fread2(abbrev)
+    state_pop = fread2(pop)
+    dmerge = merge(state_pop, state_abbrev)
+    dat0 = merge(dat0, dmerge, by.x='addr_state', by.y='Abbreviation', all.x=T, all.y=F)
+    
+    ## Selected columns
+    sel_cols = c('loan_amnt', 'term', 'int_rate', 'installment', 'grade', 'sub_grade', 'emp_length', 'home_ownership', 'annual_inc', 
+                 'verification_status', 'loan_status', 'purpose', 'dti', 'delinq_2yrs', 'inq_last_6mths', 'pub_rec_bankruptcies', 'open_acc', 
+                 'pub_rec', 'revol_bal', 'revol_util', 'total_acc', 'addr_state', 'Population2018', 'Growth2018', 'Percent_of_US')
+    dat0 = dat0[,sel_cols]
+ }
+
 
 msg('Preview of the dataset:')
 print(head(dat0))
@@ -80,5 +122,7 @@ rownames(data_types) = NULL
 dtypes_file=paste('data/modeling_data/modeling_datatypes_', year, '_Q', quarter, '.csv', sep='')
 write.csv(data_types, file=dtypes_file, row.names=F, na='')
 
-## Disconnect
-on.exit(dbDisconnect(con))
+if (use_mysql==T) {
+  ## Disconnect
+  on.exit(dbDisconnect(con))
+}

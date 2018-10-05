@@ -48,7 +48,10 @@ tablef = function(u) {
   return(tab)
 }
 
+msg = function(u) cat('\n', u, '\n')
+
 ## Look for dataset and data types files
+msg('Look for dataset and data types files')
 data_file = paste('data/modeling_data/modeling_dataset_', year, '_Q', quarter, '.csv', sep='')
 dtypes_file=paste('data/modeling_data/modeling_datatypes_', year, '_Q', quarter, '.csv', sep='')
 if (!file.exists(data_file)) exitR(paste(data_file, 'does not exist.'))
@@ -61,6 +64,7 @@ names(dtypes) = dtypes_df$field_name
 
 ## Use data.table package to leverage fread utility for fast-load of csv file if available
 ## Otherwise, use read.csv
+msg('Read in csv file')
 if ('data.table' %in% installed.packages()) {
   dat = data.table::fread(data_file, colClasses=dtypes, data.table=F)
 } else {
@@ -68,6 +72,7 @@ if ('data.table' %in% installed.packages()) {
 }
 
 ## Descriptive summaries for full dataset
+msg('Prepare descriptive summaries for full dataset')
 num_records = nrow(dat)
 miss_dat_cnt = apply(dat, 2, function(u) length(which(is.na(u))))
 miss_dat_pct = round(miss_dat_cnt / num_records * 100)
@@ -83,13 +88,15 @@ saved_objects$descriptives$overall=list(
   )
 rm(num_records,miss_dat_cnt,miss_dat_pct)
 
-## Filter for lower grade loans for debt consolidation
+## Filter for debt consolidation
+msg('Filter for debt consolidation')
 #dat = droplevels(subset(dat, grade %in% c('E', 'F', 'G')))
 dat = droplevels(subset(dat, purpose=='debt_consolidation'))
 
 
 ## Create outcome
 ## 0 if current or fully paid. 1 if late or charged off
+msg('Create outcome')
 outcome = 'late_or_chargeoff'
 saved_objects$parameters$outcome = outcome
 dat[,outcome] = factor(ifelse(dat$loan_status %in% c('Current', 'Fully Paid') == T, 'no', 'yes'))
@@ -104,6 +111,7 @@ cat('Outcome distribution (%):\n')
 print(outcome_dist)
 
 ## Figures
+msg('Figures')
 png('plots/plot_purpose.png', width=480*1, height=480*1); par(cex.lab=0.85, mar=c(5,10,4,2))
 barplot(sort(cnt_by_purpose), horiz=T, las=1, main='Number of loans, by purpose')
 invisible(dev.off())
@@ -121,6 +129,7 @@ invisible(dev.off())
 
 
 ## Split data into training/testing/validation sets
+msg('Split data into training/testing/validation sets')
 set.seed(998)
 id_train <- createDataPartition(dat[,outcome], p = .80, list = FALSE)
 dat_train <- dat[ id_train,]
@@ -137,9 +146,11 @@ saved_objects$datasets$partitions$dat_test = dat_test
 saved_objects$datasets$partitions$dat_valid = dat_valid
 
 ## Initialize h2o
+msg('Initialize h2o')
 h2o.init()
 
 # Create h2o dataframes
+msg('Create h2o dataframes')
 h2o_train = as.h2o(dat_train)
 h2o_test = as.h2o(dat_test)
 h2o_valid = as.h2o(dat_valid)
@@ -148,6 +159,7 @@ saved_objects$parameters$pred_names = pred_names
 
 
 ## AutoML
+msg('AutoML')
 automl_seed = 547
 saved_objects$automl$automl_seed = automl_seed
 mod_aml = h2o.automl(x=pred_names, y=outcome, training_frame=h2o_train, validation_frame=h2o_valid, 
@@ -190,13 +202,16 @@ mkdir ./model_results/top_gbm
 system(cmd)
 
 ## Save models
+msg('Save models')
 h2o.saveModel(top_gbm, path='model_results/top_gbm/', force=T)
 h2o.saveModel(top_model, path='model_results/top_model/', force=T)
 
 ## Explanation of predictions for a few random samples from the validation set
+msg('Explanation of predictions for a few random samples from the validation set')
 explainer  <- lime(dat_train, top_model, n_bins = 5)
 nsamples <- 4
 id_select = sample(1:nrow(dat_valid), nsamples)
+msg('xyz')
 explanation_aml <- explain(dat_valid[id_select,]
                            , explainer, labels = c("yes") 
                            , kernel_width = 3
@@ -216,7 +231,8 @@ plot_features(explanation_aml)
 invisible(dev.off())
 
 ## Save objects to disk
+msg('Save objects to disk')
 save(saved_objects, file='model_results/saved_objects.RData')
 
-h2o.shutdown(F)
+#h2o.shutdown(F)
 

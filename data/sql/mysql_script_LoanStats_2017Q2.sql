@@ -148,7 +148,7 @@ settlement_amount decimal(7,2),
 settlement_percentage decimal(4,2), 
 settlement_term int);
 
-LOAD DATA LOCAL INFILE '/Users/sw659h/Documents/training/mysql/data/downloads/LoanStats_2017Q2.csv'
+LOAD DATA LOCAL INFILE 'data/downloads/LoanStats_2017Q2.csv'
     INTO TABLE LoanStats_2017Q2 
     FIELDS TERMINATED BY ',' 
     OPTIONALLY ENCLOSED BY '"'
