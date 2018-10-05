@@ -1,2 +1,4 @@
 *.csv
 *.csv.zip
+model_results/top_gbm/*
+model_results/top_model/*
