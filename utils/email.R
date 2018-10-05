@@ -21,7 +21,7 @@ library(mailR)
 gmail_password = readLines('~/gmail.txt')
 
 ## Email subject
-email_subject = paste0("Debt consolidation modeling results for ", year, " Q", quarter)
+email_subject = paste0("Debt consolidation modeling results for ", year, " Q", quarter, ": ", Sys.time())
 
 ## Email body
 email_body = paste0(
