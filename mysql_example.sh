@@ -87,17 +87,24 @@ Rscript --vanilla utils/get_modeling_data.R ${user} ${password} ${year} ${quarte
 Rscript --vanilla utils/analysis.R ${year} ${quarter} ${work_dir} 
 
 ## Render markdown report
+Rscript --vanilla utils/render.R ${year} ${quarter} ${work_dir} 
 
 
 ## Email the report
-Rscript --vanilla utils/report.R ${year} ${quarter} ${work_dir} 
+# http://mdzhang.com/posts/osx-terminal-email/
+# https://brew.sh
+# https://medium.com/@stessyco/gmail-from-the-command-line-with-mutt-mac-os-x-92d047bcd74f
+Rscript --vanilla utils/email.R ${year} ${quarter} ${work_dir} 
+
 
 ## Check in code to github
+commit_message=echo "Analysis of ${year} Q${quarter} Lending Club dataset"
 # https://help.github.com/articles/caching-your-github-password-in-git/
 git config --global user.name "Watson, Sydeaka"
 git config --global user.email "sydeakawatson@gmail.com"
 git add --all
-git commit -m "Analysis of ${year} Q{$quarter} Lending Club dataset"
+#git commit -m ${commit_message}
+echo "${commit_message}" | git commit -F -
 #git config http.postBuffer 524288000
 git push -u origin --all
 

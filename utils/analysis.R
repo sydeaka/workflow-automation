@@ -1,9 +1,9 @@
 
 ## Set session parameters
 if (interactive()) {
-  year = 2017
+  year = 2016
   quarter = 2
-  work_dir='/Users/sw659h/Documents/training/mysql'
+  work_dir='/Users/sw659h/Documents/training/mysql/repos/workflow-automation'
 } else {
   ## Read in parameters passed in as arguments
   args = commandArgs(trailingOnly=TRUE)
@@ -17,12 +17,14 @@ saved_objects = list()
 saved_objects$parameters = list()
 saved_objects$datasets = list()
 saved_objects$automl = list()
-
+saved_objects$descriptives = list()
 
 ## Set working directory, and set additional parameters
 setwd(work_dir)
 run_time = 180
 saved_objects$parameters$run_time = run_time
+saved_objects$parameters$year = year
+saved_objects$parameters$quarter = quarter
 
 ## Load libraries
 library(h2o)
@@ -30,9 +32,20 @@ library(lime)
 library(caret)
 
 ## Function to Exit R session with informative message printed to console on exit
-exitR = function(message_string) {
-  cat(message_string, '\nExiting R session.\n')
-  q()
+exitR = function(message_string, hard_exit = F) {
+  if (hard_exit == T) {
+    cat(message_string, '\nExiting R session.\n')
+    q()
+  } else {
+    stop(message_string)
+  }
+}
+
+## Table, showing NA's if any
+tablef = function(u) {
+  tab = table(u, useNA='ifany')
+  names(tab)[names(tab) == ''] = 'BLANK'
+  return(tab)
 }
 
 ## Look for dataset and data types files
@@ -54,10 +67,25 @@ if ('data.table' %in% installed.packages()) {
   dat = read.csv(data_file, colClasses=dtypes)
 }
 
+## Descriptive summaries for full dataset
+num_records = nrow(dat)
+miss_dat_cnt = apply(dat, 2, function(u) length(which(is.na(u))))
+miss_dat_pct = round(miss_dat_cnt / num_records * 100)
+cnt_by_purpose = tablef(dat$purpose)
+dsummary = data.frame(data_types=dtypes, miss_dat_cnt=miss_dat_cnt, miss_dat_pct=miss_dat_pct)
+
+saved_objects$descriptives$overall=list(
+  num_records=num_records
+  , miss_dat_cnt=miss_dat_cnt
+  , miss_dat_pct=miss_dat_pct
+  , cnt_by_purpose=cnt_by_purpose
+  , dsummary=dsummary
+  )
+rm(num_records,miss_dat_cnt,miss_dat_pct)
+
 ## Filter for lower grade loans for debt consolidation
 #dat = droplevels(subset(dat, grade %in% c('E', 'F', 'G')))
 dat = droplevels(subset(dat, purpose=='debt_consolidation'))
-
 
 
 ## Create outcome
@@ -68,10 +96,28 @@ dat[,outcome] = factor(ifelse(dat$loan_status %in% c('Current', 'Fully Paid') ==
 dat$loan_status = NULL
 saved_objects$datasets$dat = dat
 
+num_records = nrow(dat)
+outcome_dist = table(dat[,outcome]) / nrow(dat) * 100
+saved_objects$descriptives$analysis_subset = list(num_records=num_records,outcome_dist=outcome_dist)
 
-## Print outcome distribution
-table(dat[,outcome]) / nrow(dat) * 100
-#table(dat[,'loan_status']) / nrow(dat) * 100
+cat('Outcome distribution (%):\n')
+print(outcome_dist)
+
+## Figures
+png('plots/plot_purpose.png', width=480*1, height=480*1); par(cex.lab=0.85, mar=c(5,10,4,2))
+barplot(sort(cnt_by_purpose), horiz=T, las=1, main='Number of loans, by purpose')
+invisible(dev.off())
+png('plots/plot_grade.png', width=480*1, height=480*1); par(cex.lab=0.85)
+barplot(tablef(dat$grade), horiz=F, las=1, main='Number of loans, by grade')
+invisible(dev.off())
+png('plots/plot_loan_amnt_by_grade.png', width=480*1, height=480*1); par(cex.lab=0.85)
+boxplot(loan_amnt ~ grade, data=dat, horizontal=F, las=1, main='Loan amounts ($) by grade')
+invisible(dev.off())
+png('plots/plot_int_rate_by_grade.png', width=480*1, height=480*1); par(cex.lab=0.85)
+boxplot(int_rate ~ grade, data=dat, horizontal=F, las=1, main='Interest rate (%) by grade')
+invisible(dev.off())
+
+
 
 
 ## Split data into training/testing/validation sets
@@ -82,8 +128,9 @@ dat_test  <- dat[-id_train,]
 id_train <- createDataPartition(dat_train[,outcome], p = .75, list = FALSE)
 dat_valid  <- dat_train[-id_train,]
 dat_train <- dat_train[ id_train,]
-sapply(list(dat_train, dat_test, dat_valid), nrow) / nrow(dat)
-
+data_splits_pct = round(sapply(list(train=dat_train, test=dat_test, valid=dat_valid), nrow) / nrow(dat) * 100,2)
+saved_objects$parameters$data_splits_pct = data_splits_pct
+  
 saved_objects$datasets$partitions = list()
 saved_objects$datasets$partitions$dat_train = dat_train
 saved_objects$datasets$partitions$dat_test = dat_test
@@ -150,16 +197,23 @@ h2o.saveModel(top_model, path='model_results/top_model/', force=T)
 explainer  <- lime(dat_train, top_model, n_bins = 5)
 nsamples <- 4
 id_select = sample(1:nrow(dat_valid), nsamples)
-explanation_aml <- explain(dat_valid[id_select,], explainer, labels = c("yes"), 
-                           kernel_width = 3, #feature_select = "highest_weights",
-                           n_permutations = 5000,
-                           #dist_fun = "manhattan",
-                           n_features = 5, 
-                           feature_select = "lasso_path")
+explanation_aml <- explain(dat_valid[id_select,]
+                           , explainer, labels = c("yes") 
+                           , kernel_width = 3
+                           , n_permutations = 5000
+                          #, dist_fun = "manhattan"
+                           , n_features = 5
+                           #, feature_select = "lasso_path"
+                           , feature_select = "highest_weights"
+                           )
 
-saved_objects$lime = list()
-saved_objects$lime$explainer = explainer
-saved_objects$lime$explanation_aml = explanation_aml
+#saved_objects$lime = list()
+#saved_objects$lime$explainer = explainer
+#saved_objects$lime$explanation_aml = explanation_aml
+
+png('plots/plot_lime.png', width=480*2, height=480*2); par(cex.lab=0.85)
+plot_features(explanation_aml)
+invisible(dev.off())
 
 ## Save objects to disk
 save(saved_objects, file='model_results/saved_objects.RData')
