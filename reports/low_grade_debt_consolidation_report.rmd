@@ -5,8 +5,7 @@
 output:
   html_document:
     css: style.css
-  md_document:
-    variant: markdown_github
+    keep_md: true
   pdf_document: default
   word_document: default
 ---

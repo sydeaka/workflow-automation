@@ -98,7 +98,7 @@ Rscript --vanilla utils/email.R ${year} ${quarter} ${work_dir}
 
 
 ## Check in code to github
-commit_message=echo "Analysis of ${year} Q${quarter} Lending Club dataset"
+commit_message="Analysis of ${year} Q${quarter} Lending Club dataset"
 # https://help.github.com/articles/caching-your-github-password-in-git/
 git config --global user.name "Watson, Sydeaka"
 git config --global user.email "sydeakawatson@gmail.com"
