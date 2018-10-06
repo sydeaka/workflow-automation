@@ -13,9 +13,9 @@ if (interactive()) {
 } else {
   ## Read in parameters passed in as arguments
   args = commandArgs(trailingOnly=TRUE); #print(args)
-  year = args[1]
-  quarter = args[2]
-  work_dir = args[3]
+  year = args[1]; #msg(year)
+  quarter = args[2]; #msg(quarter)
+  work_dir = args[3]; #msg(work_dir)
   Gmail_name_from=args[4]; #msg(Gmail_name_from)
   Gmail_address_from=args[5]; #msg(Gmail_address_from)
   email_address_to=args[6]; #msg(email_address_to)
