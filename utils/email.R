@@ -1,25 +1,42 @@
 
-
+msg = function(u) cat('\n', u, '\n')
 
 ## Set session parameters
+msg('Set session parameters')
 if (interactive()) {
   year = 2016
   quarter = 2
   work_dir='/Users/sw659h/Documents/training/mysql/repos/workflow-automation'
+  Gmail_name_from='Watson, Sydeaka'
+  Gmail_address_from='sydeakawatson@gmail.com'
+  email_address_to='korelasidata@gmail.com'
 } else {
   ## Read in parameters passed in as arguments
-  args = commandArgs(trailingOnly=TRUE)
+  args = commandArgs(trailingOnly=TRUE); print(args)
   year = args[1]
   quarter = args[2]
   work_dir = args[3]
+  Gmail_name_from=args[4]; msg(Gmail_name_from)
+  Gmail_address_from=args[5]; msg(Gmail_address_from)
+  email_address_to=args[6]; msg(email_address_to)
 }
 
 ## Load package
 library(mailR)
 
 ## Read in credentials
-gmail_password = readLines('~/gmail.txt')
+msg('Read in credentials')
+cred_file = '~/gmail.txt'
+if (!file.exists(cred_file)) {
+    library(getPass)
+    password_message = paste0('Credentials file not found. Enter Gmail password for ', Gmail_address_from, ':')
+    gmail_password=getPass(password_message)
+  } else {
+    gmail_password = readLines(cred_file)
+}
 
+
+msg('Email subject, body, and attachments')
 ## Email subject
 email_subject = paste0("Debt consolidation modeling results for ", year, " Q", quarter, ": ", Sys.time())
 
@@ -43,19 +60,19 @@ Sydeaka
 )
 
 
-
-
 ## Attached_files
 attached_files = c('reports/low_grade_debt_consolidation_report.html')
-
+#gmail_from = paste0(Gmail_name_from, ' <', Gmail_address_from, '>')
+gmail_from = Gmail_address_from
 
 ## Send the email
-send.mail(from = 'sydeaka.watson@gmail.com',
-    to = 'korelasidata@gmail.com',
+msg('Send the email')
+send.mail(from = gmail_from,
+    to = email_address_to,
     subject = email_subject,
     body = email_body,
     smtp = list(host.name = "smtp.gmail.com", port = 587,
-                user.name = "sydeaka.watson@gmail.com",
+                user.name = Gmail_address_from,
                 passwd = gmail_password, ssl = TRUE),
     authenticate = TRUE,
     send = TRUE,

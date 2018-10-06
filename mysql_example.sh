@@ -88,15 +88,12 @@ Rscript --vanilla utils/render.R ${year} ${quarter} ${work_dir}
 ## Email the report
 echo "
 **** Email the report"
-Rscript --vanilla utils/email.R ${year} ${quarter} ${work_dir} 
+Rscript --vanilla utils/email.R ${year} ${quarter} ${work_dir} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
 
 ## Check in code to github
 echo "
 **** Check in code to github"
-commit_message="Analysis of ${year} Q${quarter} Lending Club dataset"
-git config --global user.name "Watson, Sydeaka"
-git config --global user.email "sydeakawatson@gmail.com"
-git add --all
-echo "${commit_message}" | git commit -F -
-git push -u origin --all
+sh data/bash/github.sh
 
+## Open repository in Safari web browser
+open -a Safari https://github.com/sydeaka/workflow-automation
