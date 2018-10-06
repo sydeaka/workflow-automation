@@ -2,7 +2,7 @@
 ## Set session parameters
 if (interactive()) {
   year = 2016
-  quarter = 2
+  quarter = 4
   work_dir='/Users/sw659h/Documents/training/mysql/repos/workflow-automation'
 } else {
   ## Read in parameters passed in as arguments
@@ -21,7 +21,8 @@ saved_objects$descriptives = list()
 
 ## Set working directory, and set additional parameters
 setwd(work_dir)
-run_time = 15
+run_time = 150
+run_min = round(run_time/60 ,3)
 saved_objects$parameters$run_time = run_time
 saved_objects$parameters$year = year
 saved_objects$parameters$quarter = quarter
@@ -182,7 +183,7 @@ saved_objects$parameters$pred_names = pred_names
 
 
 ## AutoML
-msg('AutoML')
+msg(paste0('AutoML, run time = ', run_time, ' seconds (', run_min, ' minutes)'))
 automl_seed = 547
 saved_objects$automl$automl_seed = automl_seed
 mod_aml = h2o.automl(x=pred_names, y=outcome, training_frame=h2o_train, validation_frame=h2o_valid, 
@@ -226,20 +227,15 @@ explainer  <- lime(dat_train, top_model, n_bins = 5)
 nsamples <- 4
 set.seed(123)
 id_select = sample(1:nrow(dat_valid), nsamples)
-msg('xyz')
 explanation_aml <- explain(dat_valid[id_select,]
                            , explainer, labels = c("yes") 
                            , kernel_width = 3
                            , n_permutations = 5000
-                          #, dist_fun = "manhattan"
                            , n_features = 5
-                           #, feature_select = "lasso_path"
                            , feature_select = "highest_weights"
                            )
 
-#saved_objects$lime = list()
-#saved_objects$lime$explainer = explainer
-#saved_objects$lime$explanation_aml = explanation_aml
+
 
 png('plots/plot_lime.png', width=480*2, height=480*2); par(cex.lab=0.85)
 plot_features(explanation_aml)

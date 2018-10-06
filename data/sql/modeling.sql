@@ -31,7 +31,7 @@ select
  , Growth2018
  , Percent_of_US
  
-from LoanStats_2017Q2 loans
+from LoanStats_2016Q1 loans
 left join 
 state_pop_abbrev pop
 on pop.Abbreviation = loans.addr_state
