@@ -21,15 +21,15 @@ saved_objects$descriptives = list()
 
 ## Set working directory, and set additional parameters
 setwd(work_dir)
-run_time = 180
+run_time = 15
 saved_objects$parameters$run_time = run_time
 saved_objects$parameters$year = year
 saved_objects$parameters$quarter = quarter
 
 ## Load libraries
-library(h2o)
-library(lime)
-library(caret)
+suppressMessages(library(h2o))
+suppressMessages(library(lime))
+suppressMessages(library(caret))
 
 ## Function to Exit R session with informative message printed to console on exit
 exitR = function(message_string, hard_exit = F) {
@@ -249,5 +249,5 @@ invisible(dev.off())
 msg('Save objects to disk')
 save(saved_objects, file='model_results/saved_objects.RData')
 
-#h2o.shutdown(F)
+h2o.shutdown(F)
 

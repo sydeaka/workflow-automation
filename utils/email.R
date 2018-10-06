@@ -12,13 +12,13 @@ if (interactive()) {
   email_address_to='korelasidata@gmail.com'
 } else {
   ## Read in parameters passed in as arguments
-  args = commandArgs(trailingOnly=TRUE); print(args)
+  args = commandArgs(trailingOnly=TRUE); #print(args)
   year = args[1]
   quarter = args[2]
   work_dir = args[3]
-  Gmail_name_from=args[4]; msg(Gmail_name_from)
-  Gmail_address_from=args[5]; msg(Gmail_address_from)
-  email_address_to=args[6]; msg(email_address_to)
+  Gmail_name_from=args[4]; #msg(Gmail_name_from)
+  Gmail_address_from=args[5]; #msg(Gmail_address_from)
+  email_address_to=args[6]; #msg(email_address_to)
 }
 
 ## Load package
@@ -62,12 +62,11 @@ Sydeaka
 
 ## Attached_files
 attached_files = c('reports/low_grade_debt_consolidation_report.html')
-#gmail_from = paste0(Gmail_name_from, ' <', Gmail_address_from, '>')
-gmail_from = Gmail_address_from
+
 
 ## Send the email
 msg('Send the email')
-send.mail(from = gmail_from,
+send.mail(from = Gmail_address_from,
     to = email_address_to,
     subject = email_subject,
     body = email_body,

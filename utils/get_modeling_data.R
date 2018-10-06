@@ -36,9 +36,7 @@ setwd(work_dir)
 ## Helper functions
 msg = function(u) cat('\n', u, '\n')
 
-msg(paste('Running in interactive mode? ', interactive()))
 
-print(ls())
 
 if (use_mysql==T) {
   ## Load packages

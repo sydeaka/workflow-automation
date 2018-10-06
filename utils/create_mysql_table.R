@@ -68,9 +68,9 @@ createMySQLTable = function(infile_path='.', sql_path='.', infile_name=NULL,
   right_digits = 2
   decimals = names(dtypes[dtypes=='decimal'])
   if (length(decimals) > 0) {
-  	cat('Decimal attributes\n:'); print(decimals)
+  	#cat('Decimal attributes\n:'); print(decimals)
   	num_digits = sapply(z[,decimals], function(u) max(nchar(trunc(u)), na.rm=T))
-  	cat('Number of digits in decmals\n:'); print(num_digits)
+  	#cat('Number of digits in decmals\n:'); print(num_digits)
   	num_digits[is.na(num_digits)] = 10
   	num_digits = num_digits + 2
   	num_digits = pmax(num_digits, right_digits)
