@@ -50,6 +50,19 @@ tablef = function(u) {
 
 msg = function(u) cat('\n', u, '\n')
 
+## Get confusion matrices for training, validation, and testing sets
+confusionf = function(mod) {
+  perf = list(
+    h2o.performance(mod, train=T),
+    h2o.performance(mod, valid=T),
+    h2o.performance(mod, xval=T))
+  confusion = lapply(perf, h2o.confusionMatrix)
+  names(confusion) = c('train', 'valid', 'xval')
+  return(confusion)
+}
+
+
+
 ## Look for dataset and data types files
 msg('Look for dataset and data types files')
 data_file = paste('data/modeling_data/modeling_dataset_', year, '_Q', quarter, '.csv', sep='')
@@ -109,6 +122,16 @@ saved_objects$descriptives$analysis_subset = list(num_records=num_records,outcom
 
 cat('Outcome distribution (%):\n')
 print(outcome_dist)
+
+
+## Remove columns with zero variance
+id_rm = which(sapply(dat, function(u) length(unique(u)) <= 1))
+if (length(id_rm) > 0) {
+  msg("The following columns have no variance and will be removed:")
+  print(colnames(dat)[id_rm])
+  dat = dat[,-id_rm]
+}
+
 
 ## Figures
 msg('Figures')
@@ -175,15 +198,6 @@ top_model = mod_aml@leader
 
 
 
-confusionf = function(mod) {
-  perf = list(
-  h2o.performance(mod, train=T),
-  h2o.performance(mod, valid=T),
-  h2o.performance(mod, xval=T))
-  confusion = lapply(perf, h2o.confusionMatrix)
-  names(confusion) = c('train', 'valid', 'xval')
-  return(confusion)
-}
 
 saved_objects$automl$confusion = list()
 saved_objects$automl$confusion$top_model = confusionf(top_model)
@@ -210,6 +224,7 @@ h2o.saveModel(top_model, path='model_results/top_model/', force=T)
 msg('Explanation of predictions for a few random samples from the validation set')
 explainer  <- lime(dat_train, top_model, n_bins = 5)
 nsamples <- 4
+set.seed(123)
 id_select = sample(1:nrow(dat_valid), nsamples)
 msg('xyz')
 explanation_aml <- explain(dat_valid[id_select,]

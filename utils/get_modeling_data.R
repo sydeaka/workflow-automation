@@ -13,7 +13,7 @@ if (interactive()) {
     year = 2016
     quarter = 2
     work_dir='/Users/sw659h/Documents/training/mysql/repos/workflow-automation'
-    use_mysql = TRUE
+    use_mysql = FALSE
     csv = paste0(work_dir, '/data/downloads/LoanStats_', year, 'Q', quarter, '.csv')
   }
   
@@ -81,13 +81,15 @@ if (use_mysql==T) {
     state_pop = fread2(pop)
     dmerge = merge(state_pop, state_abbrev)
     dat0 = merge(dat0, dmerge, by.x='addr_state', by.y='Abbreviation', all.x=T, all.y=F)
-    
-    ## Selected columns
-    sel_cols = c('loan_amnt', 'term', 'int_rate', 'installment', 'grade', 'sub_grade', 'emp_length', 'home_ownership', 'annual_inc', 
-                 'verification_status', 'loan_status', 'purpose', 'dti', 'delinq_2yrs', 'inq_last_6mths', 'pub_rec_bankruptcies', 'open_acc', 
-                 'pub_rec', 'revol_bal', 'revol_util', 'total_acc', 'addr_state', 'Population2018', 'Growth2018', 'Percent_of_US')
-    dat0 = dat0[,sel_cols]
  }
+
+
+
+## Selected columns
+sel_cols = c('loan_amnt', 'term', 'int_rate', 'installment', 'grade', 'sub_grade', 'emp_length', 'home_ownership', 'annual_inc', 
+             'verification_status', 'loan_status', 'purpose', 'dti', 'delinq_2yrs', 'inq_last_6mths', 'pub_rec_bankruptcies', 'open_acc', 
+             'pub_rec', 'revol_bal', 'revol_util', 'total_acc', 'addr_state', 'Population2018', 'Growth2018', 'Percent_of_US')
+dat0 = dat0[,sel_cols]
 
 
 msg('Preview of the dataset:')
