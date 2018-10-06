@@ -63,9 +63,15 @@ dsum[dsum$field_name=='term_months', 'Description'] = 'Loan term (36 or 60 month
 
 
 ## Add field descriptions to variable importance table
-varimp_desc = merge(varimp, dsum[,c('field_name', 'Description')], by.x='variable', by.y='field_name', all.x=T)
+varimp_desc = merge(varimp, dict[,c('LoanStatNew', 'Description')], by.x='variable', by.y='LoanStatNew', all.x=T)
 varimp_desc = varimp_desc[order(varimp_desc$percentage, decreasing=T),]
 rownames(varimp_desc) = NULL
+varimp_desc[varimp_desc$variable=='Growth2018', 'Description'] = 'State population growth in 2018'
+varimp_desc[varimp_desc$variable=='Percent_of_US', 'Description'] = "State population's percent of U.S. population in 2018"
+varimp_desc[varimp_desc$variable=='Population2018', 'Description'] = 'State population (count) in 2018'
+varimp_desc[varimp_desc$variable=='term_months', 'Description'] = 'Loan term (36 or 60 months)'
+varimp_desc[varimp_desc$variable=='State', 'Description'] = dict$Description[dict$LoanStatNew=='addr_state'][1]
+varimp_desc[varimp_desc$variable=='Rank', 'Description'] = 'State ranking by 2018 population size'
 
 colnames(dsum) = c('Data Types', 'Missing Data (N)', 'Missing Data (%)', 'Description')
 
