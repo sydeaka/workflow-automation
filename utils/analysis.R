@@ -21,7 +21,7 @@ saved_objects$descriptives = list()
 
 ## Set working directory, and set additional parameters
 setwd(work_dir)
-run_time = 150
+run_time = 100
 run_min = round(run_time/60 ,3)
 saved_objects$parameters$run_time = run_time
 saved_objects$parameters$year = year
