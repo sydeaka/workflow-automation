@@ -1,7 +1,7 @@
 ---
 #title: "Lending Club Loan Analysis"
 #author: "Sydeaka Watson"
-#date: "2018-10-24 13:51:22"
+#date: "2018-10-24 14:24:09"
 output:
   html_document:
     css: style.css
@@ -123,12 +123,12 @@ Training, testing, and validation percentages were 60%, 20%, and 20%, respective
 
 ### AutoML
 
-We allowed the AutoML model search algorithm to run for 150 seconds, fitting a total of 9 models. Model StackedEnsemble_AllModels_0_AutoML_20181024_134829 had the highest cross-validated AUC (0.68).  
+We allowed the AutoML model search algorithm to run for 150 seconds, fitting a total of 9 models. Model StackedEnsemble_BestOfFamily_0_AutoML_20181024_142117 had the highest cross-validated AUC (0.68).  
 <br>
 <br>
 
 <!--html_preserve--><div id="htmlwidget-7101767bf9f2ffa1e8ce" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7101767bf9f2ffa1e8ce">{"x":{"filter":"none","caption":"<caption>AutoML leaderboard<\/caption>","data":[["1","2","3","4","5","6","7","8","9"],["StackedEnsemble_AllModels_0_AutoML_20181024_134829","StackedEnsemble_BestOfFamily_0_AutoML_20181024_134829","XRT_0_AutoML_20181024_134829","DRF_0_AutoML_20181024_134829","GBM_grid_0_AutoML_20181024_134829_model_0","GBM_grid_0_AutoML_20181024_134829_model_1","GBM_grid_0_AutoML_20181024_134829_model_2","GBM_grid_0_AutoML_20181024_134829_model_3","GBM_grid_0_AutoML_20181024_134829_model_4"],[0.682333454153741,0.682078524856713,0.678954951055778,0.673852006946034,0.67015325865376,0.666540758057619,0.657906866182582,0.651875783078042,0.646503957236499],[0.442911749647383,0.443000423013419,0.524285036047867,0.54456732524882,0.449900467731834,0.463330900313388,0.484907538086673,0.542483406022825,0.494109324500509],[0.368103093426598,0.369614412098585,0.366739030525926,0.369262788086154,0.377570849387601,0.378456366431794,0.38400817050049,0.390146373312855,0.395472776647423],[0.372808553892504,0.37282953396233,0.390511102715388,0.38937847173242,0.374617838537165,0.377963084707179,0.382429872303863,0.391835426363859,0.385621942307017],[0.13898621785542,0.139001861394568,0.152498921343988,0.151615594248675,0.140338524950257,0.142856093401366,0.146252607230349,0.153535001353747,0.148704282388636]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>model_id<\/th>\n      <th>auc<\/th>\n      <th>logloss<\/th>\n      <th>mean_per_class_error<\/th>\n      <th>rmse<\/th>\n      <th>mse<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatRound(this, row, data, 1, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 2, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 3, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 4, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 5, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 6, 3, 3, ',', '.');\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-7101767bf9f2ffa1e8ce">{"x":{"filter":"none","caption":"<caption>AutoML leaderboard<\/caption>","data":[["1","2","3","4","5","6","7","8","9"],["StackedEnsemble_BestOfFamily_0_AutoML_20181024_142117","StackedEnsemble_AllModels_0_AutoML_20181024_142117","XRT_0_AutoML_20181024_142117","DRF_0_AutoML_20181024_142117","GBM_grid_0_AutoML_20181024_142117_model_0","GBM_grid_0_AutoML_20181024_142117_model_1","GBM_grid_0_AutoML_20181024_142117_model_2","GBM_grid_0_AutoML_20181024_142117_model_3","GBM_grid_0_AutoML_20181024_142117_model_4"],[0.682078524856713,0.682055336879303,0.678954951055778,0.673852006946034,0.67015325865376,0.666540758057619,0.657906866182582,0.651875783078042,0.620252344226163],[0.443000423013419,0.442886287787561,0.524285036047867,0.54456732524882,0.449900467731834,0.463330900313388,0.484907538086673,0.542483406022825,0.460844976385721],[0.369614412098585,0.368552847046236,0.366739030525926,0.369262788086154,0.377570849387601,0.378456366431794,0.38400817050049,0.390146373312855,0.407621627942902],[0.37282953396233,0.372788870934883,0.390511102715388,0.38937847173242,0.374617838537165,0.377963084707179,0.382429872303863,0.391835426363859,0.379905196533903],[0.139001861394568,0.138971542292905,0.152498921343988,0.151615594248675,0.140338524950257,0.142856093401366,0.146252607230349,0.153535001353747,0.144327958353463]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>model_id<\/th>\n      <th>auc<\/th>\n      <th>logloss<\/th>\n      <th>mean_per_class_error<\/th>\n      <th>rmse<\/th>\n      <th>mse<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatRound(this, row, data, 1, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 2, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 3, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 4, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 5, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 6, 3, 3, ',', '.');\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### LIME
 
@@ -149,6 +149,6 @@ The Local Interpretable Model-Agnostic Explanations (LIME) algorithm was used to
 
 
 
-Time stamp of last report run: 2018-10-24 13:51:23
+Time stamp of last report run: 2018-10-24 14:24:11
 
 
