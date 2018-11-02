@@ -2,7 +2,7 @@
 set -e
 
 ## Settings
-work_dir=/Users/sw659h/Documents/training/mysql/repos/workflow-automation
+work_dir=~/Documents/training/mysql/repos/workflow-automation
 cd ${work_dir}
 
 ## Set parameters
