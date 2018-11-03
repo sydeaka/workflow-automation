@@ -6,8 +6,7 @@ work_dir=~/Documents/training/mysql/repos/workflow-automation
 cd ${work_dir}
 
 ## Set parameters
-echo "
-**** Set parameters"
+echo -e "\n**** Set parameters"
 source config/set_params.config
 export $(cut -d= -f1 config/set_params.config)
 source ${cred_file}
@@ -22,20 +21,20 @@ mysql_file=mysql_script_LoanStats_${year}Q${quarter}.sql
 ## Change into working directory
 cd ${work_dir}
 
-
 ## Download the dataset if it does not exist
-echo "
-**** Download the dataset if it does not exist"
+echo -e "\n**** Download the dataset if it does not exist"
 cd data/downloads
-if [ -f "$zip" ]
+if [ -f "$csv" ]
 then
-	echo "$zip found. Using local copy."
+	echo "$csv found. Using local copy."
 else
-	echo "$zip not found. Downloading..."
+	echo "$csv not found. Downloading..."
 	echo ${website}/${zip}
 	wget ${website}/${zip}
 	echo "Unzipping..."
 	unzip ${zip}
+	echo "Delete zip file"
+	rm ${zip}
 	echo "Done."
 fi
 cd ${work_dir}
@@ -44,25 +43,21 @@ cd ${work_dir}
 if [ "$use_mysql" == "TRUE" ]
 then
 	## Generate MYSQL script
-	echo "
-	**** Generate MYSQL script"
+	echo -e "\n**** Generate MYSQL script"
 	Rscript utils/generate_mysql_script.R ${year} ${quarter}
 
 	## Start MYSQL session, login
 	## Run MYSQL script to create table and load dataset
-	echo "
-	**** Run MYSQL script to create table and load dataset"
+	echo -e "\n**** Run MYSQL script to create table and load dataset"
 	${mysql_run} --user=${user} --password=${password} < data/sql/${mysql_file}
 	 
 	## Start MYSQL session, login
 	## Run MYSQL script to create modeling table
 	## Joins raw data from previous step to population tables, 
 	## Create new table with subset of columns
-	echo "
-	**** Create MYSQL script that creates modeling table"
-	sh data/bash/make-modeling-sql2.sh LoanStats_${year}Q${quarter}
-	echo "
-	Run MYSQL script to create modeling table"
+	echo -e "\n**** Create MYSQL script that creates modeling table"
+	sh data/bash/make-modeling-sql.sh LoanStats_${year}Q${quarter}
+	echo -e "\nRun MYSQL script to create modeling table"
 	${mysql_run} --user=${user} --password=${password} < data/sql/modeling.sql 
 else 
 	echo "Running without mysql."
@@ -70,29 +65,24 @@ fi
 
 
 ## Within an R session, connect to MYSQL, retrieve dataset, apply transformations
-echo "
-**** Within an R session, connect to MYSQL (if use_mysql=TRUE) or retrieve locally stored data (if use_mysql != TRUE);
+echo -e "\n**** Within an R session, connect to MYSQL (if use_mysql=TRUE) or retrieve locally stored data (if use_mysql != TRUE);
 **** retrieve dataset, apply transformations"
 Rscript --vanilla utils/get_modeling_data.R ${user} ${password} ${year} ${quarter} ${work_dir} ${use_mysql} ${csv}
 
 ## Within an R session, analyze the data and save artifacts to disk
-echo "
-**** Within an R session, analyze the data and save artifacts to disk"
+echo -e "\n**** Within an R session, analyze the data and save artifacts to disk"
 Rscript --vanilla utils/analysis.R ${year} ${quarter} ${work_dir} 
 
 ## Render markdown report
-echo "
-**** Render markdown report"
+echo -e "\n**** Render markdown report"
 Rscript --vanilla utils/render.R ${year} ${quarter} ${work_dir} 
 
 ## Email the report
-echo "
-**** Email the report"
+echo -e "\n**** Email the report"
 Rscript --vanilla utils/email.R ${year} ${quarter} ${work_dir} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
 
 ## Check in code to github
-echo "
-**** Check in code to github"
+echo -e "\n**** Check in code to github"
 sh data/bash/github.sh
 
 ## Open repository in Safari web browser

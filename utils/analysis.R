@@ -3,7 +3,7 @@
 if (interactive()) {
   year = 2016
   quarter = 4
-  work_dir='/Users/sw659h/Documents/training/mysql/repos/workflow-automation'
+  work_dir='~/Documents/training/mysql/repos/workflow-automation'
 } else {
   ## Read in parameters passed in as arguments
   args = commandArgs(trailingOnly=TRUE)

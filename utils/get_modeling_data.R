@@ -12,7 +12,7 @@ if (interactive()) {
     password = creds[2]
     year = 2016
     quarter = 2
-    work_dir='/Users/sw659h/Documents/training/mysql/repos/workflow-automation'
+    work_dir='~/Documents/training/mysql/repos/workflow-automation'
     use_mysql = FALSE
     csv = paste0(work_dir, '/data/downloads/LoanStats_', year, 'Q', quarter, '.csv')
   }
