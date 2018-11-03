@@ -2,7 +2,10 @@
 set -e
 
 ## Settings
-work_dir=~/Documents/training/mysql/repos/workflow-automation
+#work_dir=~/Documents/training/mysql/repos/workflow-automation
+
+## Detect working directory
+export work_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 cd ${work_dir}
 
 ## Set parameters
@@ -44,7 +47,7 @@ if [ "$use_mysql" == "TRUE" ]
 then
 	## Generate MYSQL script
 	echo -e "\n**** Generate MYSQL script"
-	Rscript utils/generate_mysql_script.R ${year} ${quarter}
+	utils/generate_mysql_script.R ${year} ${quarter}
 
 	## Start MYSQL session, login
 	## Run MYSQL script to create table and load dataset
@@ -67,23 +70,25 @@ fi
 ## Within an R session, connect to MYSQL, retrieve dataset, apply transformations
 echo -e "\n**** Within an R session, connect to MYSQL (if use_mysql=TRUE) or retrieve locally stored data (if use_mysql != TRUE);
 **** retrieve dataset, apply transformations"
-Rscript --vanilla utils/get_modeling_data.R ${user} ${password} ${year} ${quarter} ${work_dir} ${use_mysql} ${csv}
+utils/get_modeling_data.R ${user} ${password} ${year} ${quarter} ${work_dir} ${use_mysql} ${csv}
 
 ## Within an R session, analyze the data and save artifacts to disk
 echo -e "\n**** Within an R session, analyze the data and save artifacts to disk"
-Rscript --vanilla utils/analysis.R ${year} ${quarter} ${work_dir} 
+utils/analysis.R ${year} ${quarter} ${work_dir} 
 
 ## Render markdown report
 echo -e "\n**** Render markdown report"
-Rscript --vanilla utils/render.R ${year} ${quarter} ${work_dir} 
+utils/render.R ${year} ${quarter} ${work_dir} 
 
 ## Email the report
-echo -e "\n**** Email the report"
-Rscript --vanilla utils/email.R ${year} ${quarter} ${work_dir} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
+#echo -e "\n**** Email the report."
+#utils/email.R ${year} ${quarter} ${work_dir} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
 
 ## Check in code to github
 echo -e "\n**** Check in code to github"
 sh data/bash/github.sh
 
 ## Open repository in Safari web browser
-open -a Safari https://github.com/sydeaka/workflow-automation
+#open -a Safari https://github.com/sydeaka/workflow-automation
+
+echo "DONE."

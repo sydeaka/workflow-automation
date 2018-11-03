@@ -1,3 +1,4 @@
+#!/usr/bin/env Rscript
 
 msg = function(u) cat('\n', u, '\n')
 

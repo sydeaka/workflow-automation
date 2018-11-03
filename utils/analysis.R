@@ -1,3 +1,4 @@
+#!/usr/bin/env Rscript
 
 ## Set session parameters
 if (interactive()) {
