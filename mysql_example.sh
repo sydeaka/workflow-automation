@@ -58,7 +58,7 @@ then
 	## Joins raw data from previous step to population tables, 
 	## Create new table with subset of columns
 	echo -e "\n**** Create MYSQL script that creates modeling table"
-	sh utils/make-modeling-sql.sh LoanStats_${year}Q${quarter}
+	sh make-modeling-sql.sh LoanStats_${year}Q${quarter}
 	echo -e "\nRun MYSQL script to create modeling table"
 	${mysql_run} --user=${user} --password=${password} < data/sql/modeling.sql 
 else 
@@ -86,10 +86,5 @@ R_bots/email_report.R ${year} ${quarter} ${work_dir} ${Gmail_name_from} ${Gmail_
 ## Check in code to github
 echo -e "\n**** Check in code to github"
 R_bots/github_code_checkin.R ${year} ${quarter} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
-
-#sh utils/github.sh
-
-## Open repository in Safari web browser
-#open -a Safari https://github.com/sydeaka/workflow-automation
 
 echo "DONE."
