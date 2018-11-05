@@ -31,7 +31,7 @@ send_gmail = function(cred_file='~/gmail.txt', email_body, attached_files=NULL,
 	    authenticate = TRUE,
 	    send = TRUE,
 	    attach.files = attached_files
-	    ), quiet=T)
+	    ), quiet=F)
 
 	result = email_function_failwith()
 	if (is.null(result)) {
