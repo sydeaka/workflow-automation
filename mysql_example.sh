@@ -80,8 +80,8 @@ echo -e "\n**** Render markdown report"
 R_bots/render.R ${year} ${quarter} ${work_dir} 
 
 ## Email the report
-echo -e "\n**** Email the report."
-R_bots/email_report.R ${year} ${quarter} ${work_dir} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
+#echo -e "\n**** Email the report."
+#R_bots/email_report.R ${year} ${quarter} ${work_dir} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
 
 ## Check in code to github
 echo -e "\n**** Check in code to github"

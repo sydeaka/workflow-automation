@@ -1,0 +1,303 @@
+
+**** Set parameters
+
+**** Download the dataset if it does not exist
+LoanStats_2016Q2.csv found. Using local copy.
+
+**** Generate MYSQL script
+MYSQL script successfully generated:
+   data/sql/mysql_script_LoanStats_2016Q2.sql 
+Skipping execution of script. Abort.
+
+**** Run MYSQL script to create table and load dataset
+
+**** Create MYSQL script that creates modeling table
+
+Run MYSQL script to create modeling table
+
+**** Within an R session, connect to MYSQL (if use_mysql=TRUE) or retrieve locally stored data (if use_mysql != TRUE);
+**** retrieve dataset, apply transformations
+
+ Make connection 
+
+ List tables 
+
+ Retrieve dataset from lending.modeling 
+
+ Preview of the dataset: 
+  loan_amnt       term int_rate installment grade sub_grade emp_length
+1     14000  36 months   13.99%      478.42     C        C3    6 years
+2     13000  36 months   14.49%      447.41     C        C4    3 years
+3      8000  36 months   12.79%      268.75     C        C1  10+ years
+4     12800  60 months   14.49%      301.10     C        C4  10+ years
+5      6600  36 months   13.99%      225.55     C        C3     1 year
+6      6000  36 months   14.49%      206.50     C        C4     1 year
+  home_ownership annual_inc verification_status        loan_status
+1           RENT      45000     Source Verified Late (31-120 days)
+2           RENT      50000     Source Verified         Fully Paid
+3       MORTGAGE      50230            Verified         Fully Paid
+4       MORTGAGE      85000            Verified        Charged Off
+5           RENT      23150            Verified            Current
+6            OWN      25000     Source Verified         Fully Paid
+             purpose   dti delinq_2yrs inq_last_6mths pub_rec_bankruptcies
+1 debt_consolidation 18.48           0              2                    0
+2 debt_consolidation 22.99           1              0                    0
+3        credit_card 17.35           0              0                    0
+4 debt_consolidation  9.87           1              0                    0
+5 debt_consolidation 27.53           2              1                    0
+6              other 20.45           0              0                    0
+  open_acc pub_rec revol_bal revol_util total_acc addr_state Population2018
+1        8       0     11838     92.50%        21         AL        4888949
+2       15       0     13897     53.40%        42         AL        4888949
+3       21       0     28884     78.70%        52         AL        4888949
+4        5       0     13631     93.40%        15         AL        4888949
+5       12       0      7214     56.80%        37         AL        4888949
+6        6       0       661     13.20%         9         AL        4888949
+   Growth2018 Percent_of_US
+1 0.002913382    0.01490386
+2 0.002913382    0.01490386
+3 0.002913382    0.01490386
+4 0.002913382    0.01490386
+5 0.002913382    0.01490386
+6 0.002913382    0.01490386
+
+ Apply data transformations 
+
+                          Charged Off            Current            Default 
+                 4              13663              44093                  4 
+        Fully Paid    In Grace Period  Late (16-30 days) Late (31-120 days) 
+             37460                870                343               1421 
+
+ Print data summary 
+   loan_amnt        int_rate      installment         grade      
+ Min.   :    0   Min.   : 5.32   Min.   :   0.0   B      :29550  
+ 1st Qu.: 8000   1st Qu.: 8.39   1st Qu.: 247.0   C      :27411  
+ Median :12500   Median :11.47   Median : 375.0   A      :20418  
+ Mean   :14750   Mean   :12.48   Mean   : 443.7   D      :12247  
+ 3rd Qu.:20000   3rd Qu.:15.31   3rd Qu.: 593.3   E      : 5521  
+ Max.   :40000   Max.   :30.99   Max.   :1569.1   F      : 2075  
+                 NA's   :4                        (Other):  636  
+   sub_grade         emp_length     home_ownership    annual_inc     
+ B5     : 6541   10+ years:33425           :    4   Min.   :      0  
+ C1     : 6492   2 years  : 9034   MORTGAGE:47157   1st Qu.:  46000  
+ B4     : 6368   3 years  : 7830   OWN     :12340   Median :  65000  
+ B3     : 6241   < 1 year : 7141   RENT    :38357   Mean   :  77885  
+ A4     : 5904   1 year   : 6755                    3rd Qu.:  93000  
+ C2     : 5799   n/a      : 6471                    Max.   :9573072  
+ (Other):60513   (Other)  :27202                                     
+      verification_status             loan_status                  purpose     
+                :    4    Current           :44093   debt_consolidation:54783  
+ Not Verified   :26411    Fully Paid        :37460   credit_card       :20258  
+ Source Verified:43820    Charged Off       :13663   home_improvement  : 7853  
+ Verified       :27623    Late (31-120 days): 1421   other             : 6759  
+                          In Grace Period   :  870   major_purchase    : 2548  
+                          Late (16-30 days) :  343   medical           : 1285  
+                          (Other)           :    8   (Other)           : 4372  
+      dti          delinq_2yrs      inq_last_6mths   pub_rec_bankruptcies
+ Min.   :  0.00   Min.   : 0.0000   Min.   :0.0000   Min.   :0.0000      
+ 1st Qu.: 12.10   1st Qu.: 0.0000   1st Qu.:0.0000   1st Qu.:0.0000      
+ Median : 18.09   Median : 0.0000   Median :0.0000   Median :0.0000      
+ Mean   : 18.96   Mean   : 0.3581   Mean   :0.5351   Mean   :0.1417      
+ 3rd Qu.: 25.01   3rd Qu.: 0.0000   3rd Qu.:1.0000   3rd Qu.:0.0000      
+ Max.   :999.00   Max.   :21.0000   Max.   :5.0000   Max.   :8.0000      
+                                                                         
+    open_acc        pub_rec          revol_bal         revol_util   
+ Min.   : 0.00   Min.   : 0.0000   Min.   :      0   0%     :  480  
+ 1st Qu.: 8.00   1st Qu.: 0.0000   1st Qu.:   5754   59%    :  222  
+ Median :11.00   Median : 0.0000   Median :  10870   57%    :  218  
+ Mean   :11.86   Mean   : 0.2509   Mean   :  16686   48%    :  209  
+ 3rd Qu.:15.00   3rd Qu.: 0.0000   3rd Qu.:  19679   43%    :  202  
+ Max.   :81.00   Max.   :47.0000   Max.   :1044210   55%    :  201  
+                                                     (Other):96326  
+   total_acc        addr_state    Population2018       Growth2018       
+ Min.   :  0.00   CA     :12599   Min.   :  573720   Min.   :-0.009658  
+ 1st Qu.: 16.00   TX     : 8088   1st Qu.: 6079602   1st Qu.: 0.002898  
+ Median : 23.00   NY     : 8078   Median :10545138   Median : 0.006075  
+ Mean   : 24.45   FL     : 7165   Mean   :15351714   Mean   : 0.007060  
+ 3rd Qu.: 31.00   IL     : 4031   3rd Qu.:21312211   3rd Qu.: 0.013707  
+ Max.   :173.00   NJ     : 3537   Max.   :39776830   Max.   : 0.021502  
+                  (Other):54360   NA's   :4          NA's   :4          
+ Percent_of_US       term_months   
+ Min.   :0.001749   Min.   :36.00  
+ 1st Qu.:0.018534   1st Qu.:36.00  
+ Median :0.032147   Median :36.00  
+ Mean   :0.046799   Mean   :41.72  
+ 3rd Qu.:0.064970   3rd Qu.:36.00  
+ Max.   :0.121259   Max.   :60.00  
+ NA's   :4          NA's   :4      
+
+ Save dataset to csv 
+
+ Save data types to csv 
+
+**** Within an R session, analyze the data and save artifacts to disk
+
+ Look for dataset and data types files 
+
+ Read in csv file 
+
+ Prepare descriptive summaries for full dataset 
+
+ Filter for debt consolidation 
+
+ Create outcome 
+Outcome distribution (%):
+
+      no      yes 
+82.08751 17.91249 
+
+ The following columns have no variance and will be removed: 
+[1] "purpose"
+
+ Figures 
+
+ Split data into training/testing/validation sets 
+
+ Initialize h2o 
+
+H2O is not running yet, starting it now...
+
+Note:  In case of errors look at the following log files:
+    /var/folders/5l/pth0hlbx4cxcfp6yyg832wz00000gp/T//RtmpIoFcIR/h2o_sw659h_started_from_r.out
+    /var/folders/5l/pth0hlbx4cxcfp6yyg832wz00000gp/T//RtmpIoFcIR/h2o_sw659h_started_from_r.err
+
+
+Starting H2O JVM and connecting: . Connection successful!
+
+R is connected to the H2O cluster: 
+    H2O cluster uptime:         3 seconds 473 milliseconds 
+    H2O cluster timezone:       America/Chicago 
+    H2O data parsing timezone:  UTC 
+    H2O cluster version:        3.20.0.2 
+    H2O cluster version age:    4 months and 20 days !!! 
+    H2O cluster name:           H2O_started_from_R_sw659h_hvs382 
+    H2O cluster total nodes:    1 
+    H2O cluster total memory:   3.56 GB 
+    H2O cluster total cores:    8 
+    H2O cluster allowed cores:  8 
+    H2O cluster healthy:        TRUE 
+    H2O Connection ip:          localhost 
+    H2O Connection port:        54321 
+    H2O Connection proxy:       NA 
+    H2O Internal Security:      FALSE 
+    H2O API Extensions:         XGBoost, Algos, AutoML, Core V3, Core V4 
+    R Version:                  R version 3.5.1 (2018-07-02) 
+
+
+ Create h2o dataframes 
+  |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
+
+ AutoML, run time = 150 seconds (2.5 minutes) 
+  |                                                                              |                                                                      |   0%  |                                                                              |                                                                      |   1%  |                                                                              |=                                                                     |   1%  |                                                                              |=                                                                     |   2%  |                                                                              |==                                                                    |   2%  |                                                                              |==                                                                    |   3%  |                                                                              |==                                                                    |   4%  |                                                                              |===                                                                   |   4%  |                                                                              |===                                                                   |   5%  |                                                                              |====                                                                  |   5%  |                                                                              |====                                                                  |   6%  |                                                                              |=====                                                                 |   6%  |                                                                              |=====                                                                 |   7%  |                                                                              |=====                                                                 |   8%  |                                                                              |======                                                                |   8%  |                                                                              |======                                                                |   9%  |                                                                              |=======                                                               |   9%  |                                                                              |=======                                                               |  10%  |                                                                              |==========                                                            |  15%  |                                                                              |===========                                                           |  15%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  16%  |                                                                              |============                                                          |  17%  |                                                                              |============                                                          |  18%  |                                                                              |=============                                                         |  18%  |                                                                              |=============                                                         |  19%  |                                                                              |==============                                                        |  19%  |                                                                              |==============                                                        |  20%  |                                                                              |==================================================================    |  95%  |                                                                              |======================================================================| 100%
+                                               model_id       auc   logloss
+1    StackedEnsemble_AllModels_0_AutoML_20181104_204028 0.6823335 0.4429117
+2 StackedEnsemble_BestOfFamily_0_AutoML_20181104_204028 0.6820785 0.4430004
+3                          XRT_0_AutoML_20181104_204028 0.6789550 0.5242850
+4                          DRF_0_AutoML_20181104_204028 0.6738520 0.5445673
+5             GBM_grid_0_AutoML_20181104_204028_model_0 0.6701533 0.4499005
+6             GBM_grid_0_AutoML_20181104_204028_model_1 0.6665408 0.4633309
+7             GBM_grid_0_AutoML_20181104_204028_model_2 0.6579069 0.4849075
+8             GBM_grid_0_AutoML_20181104_204028_model_3 0.6518758 0.5424834
+9             GBM_grid_0_AutoML_20181104_204028_model_4 0.6469414 0.5180585
+  mean_per_class_error      rmse       mse
+1            0.3681031 0.3728086 0.1389862
+2            0.3696144 0.3728295 0.1390019
+3            0.3667390 0.3905111 0.1524989
+4            0.3692628 0.3893785 0.1516156
+5            0.3775708 0.3746178 0.1403385
+6            0.3784564 0.3779631 0.1428561
+7            0.3840082 0.3824299 0.1462526
+8            0.3901464 0.3918354 0.1535350
+9            0.3919668 0.3890021 0.1513227
+
+ Save models 
+[1] "/Users/sw659h/Documents/training/mysql/repos/workflow-automation/model_results/top_gbm/GBM_grid_0_AutoML_20181104_204028_model_0"
+[1] "/Users/sw659h/Documents/training/mysql/repos/workflow-automation/model_results/top_model/StackedEnsemble_AllModels_0_AutoML_20181104_204028"
+
+ Explanation of predictions for a few random samples from the validation set 
+  |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
+
+ Save objects to disk 
+[1] TRUE
+
+**** Render markdown report
+  |                                                                         |                                                                 |   0%  |                                                                         |...                                                              |   5%
+   inline R code fragments
+
+  |                                                                         |......                                                           |  10%
+label: setup (with options) 
+List of 1
+ $ include: logi FALSE
+
+  |                                                                         |.........                                                        |  14%
+  ordinary text without R code
+
+  |                                                                         |............                                                     |  19%
+label: read (with options) 
+List of 1
+ $ results: chr "hide"
+
+  |                                                                         |...............                                                  |  24%
+  ordinary text without R code
+
+  |                                                                         |...................                                              |  29%
+label: unnamed-chunk-1
+  |                                                                         |......................                                           |  33%
+  ordinary text without R code
+
+  |                                                                         |.........................                                        |  38%
+label: unnamed-chunk-2
+  |                                                                         |............................                                     |  43%
+   inline R code fragments
+
+  |                                                                         |...............................                                  |  48%
+label: unnamed-chunk-3
+  |                                                                         |..................................                               |  52%
+  ordinary text without R code
+
+  |                                                                         |.....................................                            |  57%
+label: unnamed-chunk-4 (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                         |........................................                         |  62%
+   inline R code fragments
+
+  |                                                                         |...........................................                      |  67%
+label: unnamed-chunk-5 (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                         |..............................................                   |  71%
+   inline R code fragments
+
+  |                                                                         |..................................................               |  76%
+label: unnamed-chunk-6 (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                         |.....................................................            |  81%
+  ordinary text without R code
+
+  |                                                                         |........................................................         |  86%
+label: unnamed-chunk-7 (with options) 
+List of 1
+ $ results: chr "asis"
+
+  |                                                                         |...........................................................      |  90%
+  ordinary text without R code
+
+  |                                                                         |..............................................................   |  95%
+label: unnamed-chunk-8
+  |                                                                         |.................................................................| 100%
+   inline R code fragments
+
+
+/Users/sw659h/anaconda/bin/pandoc +RTS -K512m -RTS low_grade_debt_consolidation_report.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output low_grade_debt_consolidation_report.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /Library/Frameworks/R.framework/Versions/3.5/Resources/library/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --css style.css --variable 'theme:bootstrap' --include-in-header /var/folders/5l/pth0hlbx4cxcfp6yyg832wz00000gp/T//RtmpYmcXEe/rmarkdown-str637e2265bfb9.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML' 
+
+**** Check in code to github
+
+ Set session parameters 
