@@ -4,8 +4,10 @@ set -e
 ## Settings
 #work_dir=~/Documents/training/mysql/repos/workflow-automation
 
-## Detect working directory
+## Automatically detect working directory
 export work_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+## Change into working directory
 cd ${work_dir}
 
 ## Set parameters
@@ -20,9 +22,6 @@ csv=${dataset}.csv
 zip=${csv}.zip
 mysql_file=mysql_script_LoanStats_${year}Q${quarter}.sql
 
-
-## Change into working directory
-cd ${work_dir}
 
 ## Download the dataset if it does not exist
 echo -e "\n**** Download the dataset if it does not exist"
@@ -47,7 +46,7 @@ if [ "$use_mysql" == "TRUE" ]
 then
 	## Generate MYSQL script
 	echo -e "\n**** Generate MYSQL script"
-	utils/generate_mysql_script.R ${year} ${quarter}
+	R_bots/generate_mysql_script.R ${year} ${quarter}
 
 	## Start MYSQL session, login
 	## Run MYSQL script to create table and load dataset
@@ -59,7 +58,7 @@ then
 	## Joins raw data from previous step to population tables, 
 	## Create new table with subset of columns
 	echo -e "\n**** Create MYSQL script that creates modeling table"
-	sh data/bash/make-modeling-sql.sh LoanStats_${year}Q${quarter}
+	sh utils/make-modeling-sql.sh LoanStats_${year}Q${quarter}
 	echo -e "\nRun MYSQL script to create modeling table"
 	${mysql_run} --user=${user} --password=${password} < data/sql/modeling.sql 
 else 
@@ -70,23 +69,25 @@ fi
 ## Within an R session, connect to MYSQL, retrieve dataset, apply transformations
 echo -e "\n**** Within an R session, connect to MYSQL (if use_mysql=TRUE) or retrieve locally stored data (if use_mysql != TRUE);
 **** retrieve dataset, apply transformations"
-utils/get_modeling_data.R ${user} ${password} ${year} ${quarter} ${work_dir} ${use_mysql} ${csv}
+R_bots/get_modeling_data.R ${user} ${password} ${year} ${quarter} ${work_dir} ${use_mysql} ${csv}
 
 ## Within an R session, analyze the data and save artifacts to disk
 echo -e "\n**** Within an R session, analyze the data and save artifacts to disk"
-utils/analysis.R ${year} ${quarter} ${work_dir} 
+R_bots/analysis.R ${year} ${quarter} ${work_dir} 
 
 ## Render markdown report
 echo -e "\n**** Render markdown report"
-utils/render.R ${year} ${quarter} ${work_dir} 
+R_bots/render.R ${year} ${quarter} ${work_dir} 
 
 ## Email the report
-#echo -e "\n**** Email the report."
-#utils/email.R ${year} ${quarter} ${work_dir} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
+echo -e "\n**** Email the report."
+R_bots/email_report.R ${year} ${quarter} ${work_dir} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
 
 ## Check in code to github
 echo -e "\n**** Check in code to github"
-sh data/bash/github.sh
+R_bots/github_code_checkin.R ${year} ${quarter} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
+
+#sh utils/github.sh
 
 ## Open repository in Safari web browser
 #open -a Safari https://github.com/sydeaka/workflow-automation
