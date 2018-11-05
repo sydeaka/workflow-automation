@@ -1,15 +1,15 @@
 #!/usr/bin/env Rscript
-args = commandArgs(trailingOnly=TRUE)
+args <- commandArgs(trailingOnly=TRUE)
 
 ## Read in parameters
-year = args[1]
-quarter = args[2]
+year <- args[1]
+quarter <- args[2]
 
 
 
-file_name = paste("LoanStats_", year, "Q", quarter, sep='')
-csv_name = paste(file_name, ".csv", sep='')
-table_name = paste('', file_name, sep='')
+file_name <- paste("LoanStats_", year, "Q", quarter, sep='')
+csv_name <- paste(file_name, ".csv", sep='')
+table_name <- paste('', file_name, sep='')
 
 ## Read in utility
 source("utils/create_mysql_table.R")

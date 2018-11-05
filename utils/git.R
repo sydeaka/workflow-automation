@@ -1,7 +1,7 @@
 
-git = function(git_name, git_email, commit_message) {
+git <- function(git_name, git_email, commit_message) {
 
-  cmd = paste0(
+  cmd <- paste0(
   'commit_message="', commit_message, '"
   git config --global user.name "', git_name, '"
   git config --global user.email "', git_email, '"
