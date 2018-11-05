@@ -51,7 +51,8 @@ then
 	## Start MYSQL session, login
 	## Run MYSQL script to create table and load dataset
 	echo -e "\n**** Run MYSQL script to create table and load dataset"
-	${mysql_run} --user=${user} --password=${password} < data/sql/${mysql_file}
+	#${mysql_run} --user=${user} --password=${password} < data/sql/${mysql_file}
+	utils/run_mysql_script.R ${user} ${password} data/sql/${mysql_file}
 	 
 	## Start MYSQL session, login
 	## Run MYSQL script to create modeling table
@@ -60,7 +61,10 @@ then
 	echo -e "\n**** Create MYSQL script that creates modeling table"
 	sh make-modeling-sql.sh LoanStats_${year}Q${quarter}
 	echo -e "\nRun MYSQL script to create modeling table"
-	${mysql_run} --user=${user} --password=${password} < data/sql/modeling.sql 
+	#${mysql_run} --user=${user} --password=${password} < data/sql/modeling.sql 
+	utils/run_mysql_script.R ${user} ${password} data/sql/modeling.sql 
+	
+	
 else 
 	echo "Running without mysql."
 fi
@@ -80,8 +84,8 @@ echo -e "\n**** Render markdown report"
 R_bots/render.R ${year} ${quarter} ${work_dir} 
 
 ## Email the report
-#echo -e "\n**** Email the report."
-#R_bots/email_report.R ${year} ${quarter} ${work_dir} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
+echo -e "\n**** Email the report."
+R_bots/email_report.R ${year} ${quarter} ${work_dir} ${Gmail_name_from} ${Gmail_address_from} ${email_address_to}
 
 ## Check in code to github
 echo -e "\n**** Check in code to github"
