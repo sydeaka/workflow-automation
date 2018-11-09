@@ -42,7 +42,7 @@ con <- dbConnect(dbDriver('MySQL'),
 
 msg('Execute contents of MySQL script')
 for (query in queries) {
-  cat(query)
+  #cat(query)
   dbSendStatement(con, query)
   msg('done.')
 }
