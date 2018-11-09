@@ -26,7 +26,7 @@ if (interactive()) {
 ## Helper functions
 msg <- function(u) cat('\n', u, '\n')
 
-## Read in the contents of the MySQL script as a string
+## Read in the contents of the MySQL script as a vector of strings (i.e., one entry per command)
 queries <- paste(readLines(mysql_script_filename), collapse=" ")
 queries <- sapply(strsplit(queries, ';')[[1]], function(u) paste0(trimws(u), ';'))
 names(queries) <- NULL

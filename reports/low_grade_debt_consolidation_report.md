@@ -1,7 +1,7 @@
 ---
 #title: "Lending Club Loan Analysis"
 #author: "Sydeaka Watson"
-#date: "2018-11-04 21:30:09"
+#date: "2018-11-08 20:50:40"
 output:
   html_document:
     css: style.css
@@ -39,6 +39,14 @@ These datasets are quite popular among Kaggle competitors and other data science
 - Datasets: https://www.lendingclub.com/info/download-data.action
 
 In this report, we share the results of a modeling exercise in which we attempt to predict adverse outcomes for Lending Club loans to be used for debt consolidation purposes. The dataset used for this exercise are related to loan applications processed in **2016, Quarter 2**.
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+Report updated 2018-11-08 20:50:42.
 
 ## Dataset {.tabset .tabset-fade}
 
@@ -72,48 +80,48 @@ For details, click on any of the following tabs.
 
 Table: Data types and missing data summaries
 
-     Data Types             Missing Data (N)   Missing Data (%)   Description   NA                                                                                                                                                                                                       
----  ---------------------  -----------------  -----------------  ------------  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-1    addr_state             factor             0                  0             The state provided by the borrower in the loan application                                                                                                                                               
-2    annual_inc             numeric            0                  0             The self-reported annual income provided by the borrower during registration.                                                                                                                            
-3    delinq_2yrs            integer            0                  0             The number of 30+ days past-due incidences of delinquency in the borrower's credit file for the past 2 years                                                                                             
-4    dti                    numeric            0                  0             A ratio calculated using the borrower’s total monthly debt payments on the total debt obligations, excluding mortgage and the requested LC loan, divided by the borrower’s self-reported monthly income. 
-5    emp_length             factor             0                  0             Employment length in years. Possible values are between 0 and 10 where 0 means less than one year and 10 means ten or more years.                                                                        
-6    grade                  factor             0                  0             LC assigned loan grade                                                                                                                                                                                   
-7    Growth2018             numeric            4                  0             State population growth in 2018                                                                                                                                                                          
-8    home_ownership         factor             0                  0             The home ownership status provided by the borrower during registration or obtained from the credit report. Our values are: RENT, OWN, MORTGAGE, OTHER                                                    
-9    inq_last_6mths         integer            0                  0             The number of inquiries in past 6 months (excluding auto and mortgage inquiries)                                                                                                                         
-10   installment            numeric            0                  0             The monthly payment owed by the borrower if the loan originates.                                                                                                                                         
-11   int_rate               numeric            4                  0             Interest Rate on the loan                                                                                                                                                                                
-12   loan_amnt              integer            0                  0             The listed amount of the loan applied for by the borrower. If at some point in time, the credit department reduces the loan amount, then it will be reflected in this value.                             
-13   loan_status            factor             0                  0             Current status of the loan                                                                                                                                                                               
-14   open_acc               integer            0                  0             The number of open credit lines in the borrower's credit file.                                                                                                                                           
-15   Percent_of_US          numeric            4                  0             State population's percent of U.S. population in 2018                                                                                                                                                    
-16   Population2018         integer            4                  0             State population (count) in 2018                                                                                                                                                                         
-17   pub_rec                integer            0                  0             Number of derogatory public records                                                                                                                                                                      
-18   pub_rec_bankruptcies   integer            0                  0             Number of public record bankruptcies                                                                                                                                                                     
-19   purpose                factor             0                  0             A category provided by the borrower for the loan request.                                                                                                                                                
-20   revol_bal              integer            0                  0             Total credit revolving balance                                                                                                                                                                           
-21   revol_util             factor             0                  0             Revolving line utilization rate, or the amount of credit the borrower is using relative to all available revolving credit.                                                                               
-22   sub_grade              factor             0                  0             LC assigned loan subgrade                                                                                                                                                                                
-23   term_months            numeric            4                  0             Loan term (36 or 60 months)                                                                                                                                                                              
-24   total_acc              integer            0                  0             The total number of credit lines currently in the borrower's credit file                                                                                                                                 
-25   verification_status    factor             0                  0             Indicates if income was verified by LC, not verified, or if the income source was verified                                                                                                               
+     Field name             Data Types   Missing Data (N)   Missing Data (%)   Description                                                                                                                                                                                              
+---  ---------------------  -----------  -----------------  -----------------  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1    addr_state             factor       0                  0                  The state provided by the borrower in the loan application                                                                                                                                               
+2    annual_inc             numeric      0                  0                  The self-reported annual income provided by the borrower during registration.                                                                                                                            
+3    delinq_2yrs            integer      0                  0                  The number of 30+ days past-due incidences of delinquency in the borrower's credit file for the past 2 years                                                                                             
+4    dti                    numeric      0                  0                  A ratio calculated using the borrower’s total monthly debt payments on the total debt obligations, excluding mortgage and the requested LC loan, divided by the borrower’s self-reported monthly income. 
+5    emp_length             factor       0                  0                  Employment length in years. Possible values are between 0 and 10 where 0 means less than one year and 10 means ten or more years.                                                                        
+6    grade                  factor       0                  0                  LC assigned loan grade                                                                                                                                                                                   
+7    Growth2018             numeric      4                  0                  State population growth in 2018                                                                                                                                                                          
+8    home_ownership         factor       0                  0                  The home ownership status provided by the borrower during registration or obtained from the credit report. Our values are: RENT, OWN, MORTGAGE, OTHER                                                    
+9    inq_last_6mths         integer      0                  0                  The number of inquiries in past 6 months (excluding auto and mortgage inquiries)                                                                                                                         
+10   installment            numeric      0                  0                  The monthly payment owed by the borrower if the loan originates.                                                                                                                                         
+11   int_rate               numeric      4                  0                  Interest Rate on the loan                                                                                                                                                                                
+12   loan_amnt              integer      0                  0                  The listed amount of the loan applied for by the borrower. If at some point in time, the credit department reduces the loan amount, then it will be reflected in this value.                             
+13   loan_status            factor       0                  0                  Current status of the loan                                                                                                                                                                               
+14   open_acc               integer      0                  0                  The number of open credit lines in the borrower's credit file.                                                                                                                                           
+15   Percent_of_US          numeric      4                  0                  State population's percent of U.S. population in 2018                                                                                                                                                    
+16   Population2018         integer      4                  0                  State population (count) in 2018                                                                                                                                                                         
+17   pub_rec                integer      0                  0                  Number of derogatory public records                                                                                                                                                                      
+18   pub_rec_bankruptcies   integer      0                  0                  Number of public record bankruptcies                                                                                                                                                                     
+19   purpose                factor       0                  0                  A category provided by the borrower for the loan request.                                                                                                                                                
+20   revol_bal              integer      0                  0                  Total credit revolving balance                                                                                                                                                                           
+21   revol_util             factor       0                  0                  Revolving line utilization rate, or the amount of credit the borrower is using relative to all available revolving credit.                                                                               
+22   sub_grade              factor       0                  0                  LC assigned loan subgrade                                                                                                                                                                                
+23   term_months            numeric      4                  0                  Loan term (36 or 60 months)                                                                                                                                                                              
+24   total_acc              integer      0                  0                  The total number of credit lines currently in the borrower's credit file                                                                                                                                 
+25   verification_status    factor       0                  0                  Indicates if income was verified by LC, not verified, or if the income source was verified                                                                                                               
 
 
 
 
 ### Loan Purpose
-![](../plots/plot_purpose.png)
+![](../plots/plot_purpose.png){width=500px}
 
 ### Loan Grade
-![](../plots/plot_grade.png)
+![](../plots/plot_grade.png){width=500px}
 
 ### Loan Amount
-![](../plots/plot_loan_amnt_by_grade.png)
+![](../plots/plot_loan_amnt_by_grade.png){width=500px}
 
 ### Interest Rate
-![](../plots/plot_int_rate_by_grade.png)
+![](../plots/plot_int_rate_by_grade.png){width=500px}
 
 ## Modeling {.tabset .tabset-fade}
 
@@ -123,12 +131,12 @@ Training, testing, and validation percentages were 60%, 20%, and 20%, respective
 
 ### AutoML
 
-We allowed the AutoML model search algorithm to run for 150 seconds, fitting a total of 9 models. Model StackedEnsemble_AllModels_0_AutoML_20181104_212714 had the highest cross-validated AUC (0.68).  
+We allowed the AutoML model search algorithm to run for 150 seconds, fitting a total of 9 models. Model StackedEnsemble_AllModels_0_AutoML_20181108_204746 had the highest cross-validated AUC (0.68).  
 <br>
 <br>
 
 <!--html_preserve--><div id="htmlwidget-7101767bf9f2ffa1e8ce" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7101767bf9f2ffa1e8ce">{"x":{"filter":"none","caption":"<caption>AutoML leaderboard<\/caption>","data":[["1","2","3","4","5","6","7","8","9"],["StackedEnsemble_AllModels_0_AutoML_20181104_212714","StackedEnsemble_BestOfFamily_0_AutoML_20181104_212714","XRT_0_AutoML_20181104_212714","DRF_0_AutoML_20181104_212714","GBM_grid_0_AutoML_20181104_212714_model_0","GBM_grid_0_AutoML_20181104_212714_model_1","GBM_grid_0_AutoML_20181104_212714_model_2","GBM_grid_0_AutoML_20181104_212714_model_3","GBM_grid_0_AutoML_20181104_212714_model_4"],[0.682333454153741,0.682078524856713,0.678954951055778,0.673852006946034,0.67015325865376,0.666540758057619,0.657906866182582,0.651875783078042,0.646941441901879],[0.442911749647383,0.443000423013419,0.524285036047867,0.54456732524882,0.449900467731834,0.463330900313388,0.484907538086673,0.542483406022825,0.518058520006504],[0.368103093426598,0.369614412098585,0.366739030525926,0.369262788086154,0.377570849387601,0.378456366431794,0.38400817050049,0.390146373312855,0.391966835647833],[0.372808553892504,0.37282953396233,0.390511102715388,0.38937847173242,0.374617838537165,0.377963084707179,0.382429872303863,0.391835426363859,0.389002125749157],[0.13898621785542,0.139001861394568,0.152498921343988,0.151615594248675,0.140338524950257,0.142856093401366,0.146252607230349,0.153535001353747,0.151322653837363]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>model_id<\/th>\n      <th>auc<\/th>\n      <th>logloss<\/th>\n      <th>mean_per_class_error<\/th>\n      <th>rmse<\/th>\n      <th>mse<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatRound(this, row, data, 1, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 2, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 3, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 4, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 5, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 6, 3, 3, ',', '.');\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-7101767bf9f2ffa1e8ce">{"x":{"filter":"none","caption":"<caption>AutoML leaderboard<\/caption>","data":[["1","2","3","4","5","6","7","8","9"],["StackedEnsemble_AllModels_0_AutoML_20181108_204746","StackedEnsemble_BestOfFamily_0_AutoML_20181108_204746","XRT_0_AutoML_20181108_204746","DRF_0_AutoML_20181108_204746","GBM_grid_0_AutoML_20181108_204746_model_0","GBM_grid_0_AutoML_20181108_204746_model_1","GBM_grid_0_AutoML_20181108_204746_model_2","GBM_grid_0_AutoML_20181108_204746_model_3","GBM_grid_0_AutoML_20181108_204746_model_4"],[0.682385066204964,0.682078524856713,0.678954951055778,0.673852006946034,0.67015325865376,0.666540758057619,0.657906866182582,0.651875783078042,0.649770598560962],[0.442912450015745,0.443000423013419,0.524285036047867,0.54456732524882,0.449900467731834,0.463330900313388,0.484907538086673,0.542483406022825,0.472144704230914],[0.368059971151878,0.369614412098585,0.366739030525926,0.369262788086154,0.377570849387601,0.378456366431794,0.38400817050049,0.390146373312855,0.391223429532633],[0.372808968554873,0.37282953396233,0.390511102715388,0.38937847173242,0.374617838537165,0.377963084707179,0.382429872303863,0.391835426363859,0.381584930697903],[0.138986527034948,0.139001861394568,0.152498921343988,0.151615594248675,0.140338524950257,0.142856093401366,0.146252607230349,0.153535001353747,0.145607059335723]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>model_id<\/th>\n      <th>auc<\/th>\n      <th>logloss<\/th>\n      <th>mean_per_class_error<\/th>\n      <th>rmse<\/th>\n      <th>mse<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatRound(this, row, data, 1, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 2, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 3, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 4, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 5, 3, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 6, 3, 3, ',', '.');\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### LIME
 
@@ -136,7 +144,9 @@ The Local Interpretable Model-Agnostic Explanations (LIME) algorithm was used to
 <br>
 <br>
 
-![](../plots/plot_lime.png)
+![](../plots/plot_lime_1.png){width=1400px}
+<br>
+![](../plots/plot_lime_2.png){width=1400px}
 
 
 ### Variable Importance
@@ -149,6 +159,6 @@ The Local Interpretable Model-Agnostic Explanations (LIME) algorithm was used to
 
 
 
-Time stamp of last report run: 2018-11-04 21:30:11
+
 
 

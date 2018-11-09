@@ -52,6 +52,8 @@ for (obj_nm in names(obj_names)) {
 }
 rm(saved_objects,item,items, obj_names, obj_nm,partitions,automl_seed)
 
+
+
 ## Merge data dictionary with data summary
 dsum = data.frame(field_name=rownames(overall$dsummary), overall$dsummary); #head(dsum)
 dict = read_excel('../data/dictionary/LCDataDictionary.xlsx', 1)
@@ -73,7 +75,7 @@ varimp_desc[varimp_desc$variable=='term_months', 'Description'] = 'Loan term (36
 varimp_desc[varimp_desc$variable=='State', 'Description'] = dict$Description[dict$LoanStatNew=='addr_state'][1]
 varimp_desc[varimp_desc$variable=='Rank', 'Description'] = 'State ranking by 2018 population size'
 
-colnames(dsum) = c('Data Types', 'Missing Data (N)', 'Missing Data (%)', 'Description')
+colnames(dsum) = c('Field name', 'Data Types', 'Missing Data (N)', 'Missing Data (%)', 'Description')
 
 ```
 
@@ -116,6 +118,14 @@ These datasets are quite popular among Kaggle competitors and other data science
 - Datasets: https://www.lendingclub.com/info/download-data.action
 
 In this report, we share the results of a modeling exercise in which we attempt to predict adverse outcomes for Lending Club loans to be used for debt consolidation purposes. The dataset used for this exercise are related to loan applications processed in **`r year`, Quarter `r quarter`**.
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+Report updated `r Sys.time()`.
 
 ## Dataset {.tabset .tabset-fade}
 
@@ -160,16 +170,16 @@ kable2(dsum, caption='Data types and missing data summaries')
 
 
 ### Loan Purpose
-![](../plots/plot_purpose.png)
+![](../plots/plot_purpose.png){width=500px}
 
 ### Loan Grade
-![](../plots/plot_grade.png)
+![](../plots/plot_grade.png){width=500px}
 
 ### Loan Amount
-![](../plots/plot_loan_amnt_by_grade.png)
+![](../plots/plot_loan_amnt_by_grade.png){width=500px}
 
 ### Interest Rate
-![](../plots/plot_int_rate_by_grade.png)
+![](../plots/plot_int_rate_by_grade.png){width=500px}
 
 ## Modeling {.tabset .tabset-fade}
 
@@ -193,7 +203,9 @@ The Local Interpretable Model-Agnostic Explanations (LIME) algorithm was used to
 <br>
 <br>
 
-![](../plots/plot_lime.png)
+![](../plots/plot_lime_1.png){width=1400px}
+<br>
+![](../plots/plot_lime_2.png){width=1400px}
 
 
 ### Variable Importance
@@ -209,6 +221,6 @@ datatable(varimp_desc, caption='Variable Importance for top GBM') %>% formatRoun
 ```
 
 
-Time stamp of last report run: `r Sys.time()`
+
 
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
 ## Set session parameters
+## If running interactively, manually set parameter values.
+## Otherwise, read arguments passed upon execution of the script.
 if (interactive()) {
   year <- 2016
   quarter <- 4
@@ -91,8 +93,10 @@ msg('Prepare descriptive summaries for full dataset')
 num_records <- nrow(dat)
 miss_dat_cnt <- apply(dat, 2, function(u) length(which(is.na(u))))
 miss_dat_pct <- round(miss_dat_cnt / num_records * 100)
-cnt_by_purpose <- tablef(dat$purpose)
+cnt_by_purpose <- sort(tablef(dat$purpose), decreasing=T)
+names(cnt_by_purpose) = gsub('_', ' ', names(cnt_by_purpose))
 dsummary <- data.frame(data_types=dtypes, miss_dat_cnt=miss_dat_cnt, miss_dat_pct=miss_dat_pct)
+
 
 saved_objects$descriptives$overall=list(
   num_records=num_records
@@ -134,20 +138,36 @@ if (length(id_rm) > 0) {
   dat <- dat[,-id_rm]
 }
 
+## PNG plotting utility
+plotf = function(plot_filename, mult=2) {
+  plot_filename = paste(plot_filename, 'png', sep='.')
+  png(plot_filename, width=480*mult, height=480*mult, res=200)
+}
+
+
 
 ## Figures
 msg('Figures')
-png('plots/plot_purpose.png', width=480*1, height=480*1); par(cex.lab=0.85, mar=c(5,10,4,2))
-barplot(sort(cnt_by_purpose), horiz=T, las=1, main='Number of loans, by purpose')
+selected_color = 'dodgerblue3'
+
+plotf('plots/plot_purpose')
+par(cex.lab=0.85, mar=c(5,10,4,2))
+barplot(cnt_by_purpose/1000, horiz=T, las=1, main='Number of loans, by purpose', col=selected_color, xlab='Thousands')
 invisible(dev.off())
-png('plots/plot_grade.png', width=480*1, height=480*1); par(cex.lab=0.85)
-barplot(tablef(dat$grade), horiz=F, las=1, main='Number of loans, by grade')
+
+plotf('plots/plot_grade')
+par(cex.lab=0.85)
+barplot(tablef(dat$grade)/1000, horiz=F, las=1, main='Number of loans, by grade', col=selected_color, xlab='Thousands')
 invisible(dev.off())
-png('plots/plot_loan_amnt_by_grade.png', width=480*1, height=480*1); par(cex.lab=0.85)
-boxplot(loan_amnt ~ grade, data=dat, horizontal=F, las=1, main='Loan amounts ($) by grade')
+
+plotf('plots/plot_loan_amnt_by_grade')
+par(cex.lab=0.85)
+boxplot(loan_amnt/1000 ~ grade, data=dat, horizontal=F, las=1, main='Loan amounts ($) by grade', ylab='Thousands', col=selected_color)
 invisible(dev.off())
-png('plots/plot_int_rate_by_grade.png', width=480*1, height=480*1); par(cex.lab=0.85)
-boxplot(int_rate ~ grade, data=dat, horizontal=F, las=1, main='Interest rate (%) by grade')
+
+plotf('plots/plot_int_rate_by_grade')
+par(cex.lab=0.85)
+boxplot(int_rate ~ grade, data=dat, horizontal=F, las=1, main='Interest rate (%) by grade', col=selected_color)
 invisible(dev.off())
 
 
@@ -228,19 +248,30 @@ explainer  <- lime(dat_train, top_model, n_bins = 5)
 nsamples <- 4
 set.seed(123)
 id_select = sample(1:nrow(dat_valid), nsamples)
-explanation_aml <- explain(dat_valid[id_select,]
+
+png('plots/plot_lime_1.png', width=480*4, height=480*2, res=200)
+explanation_aml <- explain(dat_valid[id_select[1:2],]
                            , explainer, labels = c("yes") 
                            , kernel_width = 3
                            , n_permutations = 5000
                            , n_features = 5
                            , feature_select = "highest_weights"
                            )
-
-
-
-png('plots/plot_lime.png', width=480*2, height=480*2); par(cex.lab=0.85)
 plot_features(explanation_aml)
 invisible(dev.off())
+
+png('plots/plot_lime_2.png', width=480*4, height=480*2, res=200)
+explanation_aml <- explain(dat_valid[id_select[3:4],]
+                           , explainer, labels = c("yes") 
+                           , kernel_width = 3
+                           , n_permutations = 5000
+                           , n_features = 5
+                           , feature_select = "highest_weights"
+)
+plot_features(explanation_aml)
+invisible(dev.off())
+
+
 
 ## Save objects to disk
 msg('Save objects to disk')

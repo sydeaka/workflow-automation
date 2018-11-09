@@ -1,3 +1,15 @@
+library(plotly)
+
+cnt_by_purpose_df = data.frame(purpose=names(cnt_by_purpose), count=as.numeric(cnt_by_purpose)); cnt_by_purpose_df
+cnt_by_purpose_df$purpose = factor(cnt_by_purpose_df$purpose, levels=cnt_by_purpose_df$purpose)
+plot_ly(x = cnt_by_purpose_df$count, y=cnt_by_purpose_df$purpose, type = 'bar', orientation = 'h' ) %>%
+  layout(title = "Number of loans, by purpose", 
+         xaxis = list(categoryorder = "array", categoryarray = names(cnt_by_purpose))) %>% 
+  export(file = "plots/plot_purpose.png")
+
+
+
+
 id_top_models = ids[1:5]
 cat('Saving models:\n')
 for (id in id_top_models) {

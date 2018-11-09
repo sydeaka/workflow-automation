@@ -14,8 +14,8 @@ table_name <- paste('', file_name, sep='')
 ## Read in utility
 source("utils/create_mysql_table.R")
 
-createMySQLTable(infile_path='data/downloads', # '/Users/sw659h/Documents/training/mysql/repos/workflow-automation/data/downloads' 
-                 sql_path='data/sql', # '/Users/sw659h/Documents/training/mysql/repos/workflow-automation/data/sql'
+createMySQLTable(infile_path='data/downloads',  
+                 sql_path='data/sql', 
                  infile_name=csv_name, 
                  mysql_db='lending', mysql_table_name=table_name, 
                  mysql_file_name=gsub('csv', 'sql', paste('mysql_script_', csv_name, sep='')))

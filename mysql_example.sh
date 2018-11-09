@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-## Settings
-#work_dir=~/Documents/training/mysql/repos/workflow-automation
-
 ## Automatically detect working directory
 export work_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
